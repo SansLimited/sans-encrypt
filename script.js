@@ -47,7 +47,7 @@ function processFile() {
         const url = URL.createObjectURL(blob);
         const downloadLink = document.getElementById('download-link');
 
-        // Set download filename to input file name with _processed suffix
+        // Set download filename to input file name with _processed suffix and .lua extension
         const fileName = input.name.replace(/\.lua$/, '') + '_processed.lua';
         downloadLink.href = url;
         downloadLink.download = fileName;
