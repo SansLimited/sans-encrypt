@@ -47,6 +47,7 @@ function processFile() {
         const url = URL.createObjectURL(blob);
         const downloadLink = document.getElementById('download-link');
         downloadLink.href = url;
+        downloadLink.download = input.name.replace(/\.lua$/, '_processed.lua');
         downloadLink.style.display = 'block';
     };
     reader.readAsText(input);
