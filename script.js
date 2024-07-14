@@ -46,8 +46,11 @@ function processFile() {
         const blob = new Blob([obfuscatedScript], { type: 'text/plain' });
         const url = URL.createObjectURL(blob);
         const downloadLink = document.getElementById('download-link');
+
+        // Set download filename to input file name with _processed suffix
+        const fileName = input.name.replace(/\.lua$/, '') + '_processed.lua';
         downloadLink.href = url;
-        downloadLink.download = input.name.replace(/\.lua$/, '_processed.lua');
+        downloadLink.download = fileName;
         downloadLink.style.display = 'block';
     };
     reader.readAsText(input);
