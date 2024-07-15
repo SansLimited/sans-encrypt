@@ -10,23 +10,169 @@
             font-family: Arial, sans-serif;
             background-color: #e9ecef;
             margin: 0;
-            padding: 20px;
+            padding: 0;
             text-align: center;
         }
-        input[type="file"], button {
+        header {
+            background-color: #343a40;
+            color: white;
+            padding: 10px 0;
+            position: relative;
+        }
+        h1 {
+            font-size: 1.5em;
+            margin: 0;
+        }
+        .menu {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            cursor: pointer;
+            z-index: 1;
+        }
+        .menu-content {
+            display: none;
+            position: absolute;
+            background: white;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            border-radius: 4px;
+            top: 30px;
+            left: 0;
+            z-index: 1;
+            width: 150px;
+        }
+        .menu-content a {
+            padding: 10px;
+            display: block;
+            text-decoration: none;
+            color: black;
+        }
+        .menu-content a:hover {
+            background-color: #f8f9fa;
+        }
+        .hamburger {
+            width: 30px;
+            height: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .bar {
+            height: 3px;
+            background-color: white;
+            border-radius: 2px;
+        }
+        .container {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin: 20px auto;
+            max-width: 500px;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        img {
+            width: 100%;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+        input[type="file"] {
             padding: 10px;
             margin: 10px 0;
-            width: 200px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: calc(100% - 22px);
+        }
+        button {
+            padding: 10px;
+            font-size: 1em;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        #download-link {
+            display: none;
+            margin-top: 20px;
+            text-decoration: none;
+            color: #007bff;
+        }
+        .discord-link {
+            margin-top: 20px;
+        }
+        .discord-link img {
+            width: 40px;
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
-    <h1>SansLimited Encryption</h1>
-    <input type="file" id="fileInput">
-    <button onclick="processFile()">Generate</button>
-    <a id="download-link" href="#" download style="display:none;">Download Processed File</a>
+    <header>
+        <div class="menu" onclick="toggleMenu()">
+            <div class="hamburger">
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+            </div>
+        </div>
+        <h1>SansLimited Encryption</h1>
+    </header>
+    
+    <div class="container">
+        <div class="menu-content" id="menu-content">
+            <a href="javascript:void(0);" onclick="showTab('encrypt')">Encrypt</a>
+            <a href="javascript:void(0);" onclick="showTab('scripts')">Premium Script</a>
+        </div>
+
+        <div id="encrypt" class="tab-content active">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRcBgVLR8BbmSoegSAqrDefK2E74rWMihUevg&usqp=CAU" alt="Deskripsi Gambar">
+            <input type="file" id="fileInput">
+            <button onclick="processFile()">Generate</button>
+            <a id="download-link" href="#" download>Download Processed File</a>
+        </div>
+
+        <div id="scripts" class="tab-content">
+            <p>Berbagai script yang tersedia untuk dijual:</p>
+            <ul>
+                <li>Script 1: Deskripsi</li>
+                <li>Script 2: Deskripsi</li>
+                <li>Script 3: Deskripsi</li>
+            </ul>
+        </div>
+
+        <div class="discord-link">
+            <p>Join our community on Discord:</p>
+            <a href="https://discord.gg/your-invite-link" target="_blank">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSgIDe3SuT_er3262Mnt2tvQZ8r_lBa0dOk_w&usqp=CAU" alt="Discord Logo">
+            </a>
+        </div>
+    </div>
 
     <script>
+        function toggleMenu() {
+            const menuContent = document.getElementById('menu-content');
+            menuContent.style.display = menuContent.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function showTab(tabName) {
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.getElementById(tabName).classList.add('active');
+            document.getElementById('menu-content').style.display = 'none';
+        }
+
         function processFile() {
             const input = document.getElementById('fileInput').files[0];
             if (!input) {
@@ -64,4 +210,4 @@
         }
     </script>
 </body>
-</html>
+                    </html>
