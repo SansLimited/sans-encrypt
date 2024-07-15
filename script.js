@@ -13,6 +13,7 @@ function showTab(tabName) {
 }
 
 function hexEncode(data) {
+    rfunction hexEncode(data) {
     return data.split('').map(char => char.charCodeAt(0).toString(16).padStart(2, '0')).join('');
 }
 
@@ -28,7 +29,12 @@ function obfuscateScript(scriptContent) {
     const dumpedScript = hexEncode(btoa(scriptContent));
 
     return `
-        local SansLimited="${dumpedDecodeFunc}";local sanslimited=assert(load((SansLimited:gsub('..',function(cc)return string.char(tonumber(cc,16))end))))();local Limited="${dumpedScript}";local limited=sanslimited(Limited);local SANSLIMITED=assert(load(limited));SANSLIMITED()
+        local SansLimited="${dumpedDecodeFunc}";
+        local sanslimited=assert(load(SansLimited));
+        local Limited="${dumpedScript}";
+        local limited=sanslimited(Limited);
+        local SANSLIMITED=assert(load(limited));
+        SANSLIMITED()
     `;
 }
 
@@ -46,10 +52,8 @@ function processFile() {
         const blob = new Blob([obfuscatedScript], { type: 'text/plain' });
         const url = URL.createObjectURL(blob);
 
-        // Set download filename to input file name with _processed suffix and .lua extension
         const fileName = input.name.replace(/\.lua$/, '') + '_processed.lua';
         
-        // Create a temporary link to trigger the download
         const a = document.createElement('a');
         a.href = url;
         a.download = fileName;
@@ -58,4 +62,4 @@ function processFile() {
         document.body.removeChild(a);
     };
     reader.readAsText(input);
-}
+            }
