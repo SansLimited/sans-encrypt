@@ -24,8 +24,8 @@ function obfuscateScript(scriptContent) {
             end))
         end
     `;
-    const dumpedDecodeFunc = hexEncode(btoa(hexDecodeFunc)); // Assuming `btoa` simulates `string.dump`
-    const dumpedScript = hexEncode(btoa(scriptContent)); // Assuming `btoa` simulates `string.dump`
+    const dumpedDecodeFunc = hexEncode(btoa(hexDecodeFunc));
+    const dumpedScript = hexEncode(btoa(scriptContent));
 
     return `
         local SansLimited="${dumpedDecodeFunc}";local sanslimited=assert(load((SansLimited:gsub('..',function(cc)return string.char(tonumber(cc,16))end))))();local Limited="${dumpedScript}";local limited=sanslimited(Limited);local SANSLIMITED=assert(load(limited));SANSLIMITED()
@@ -45,13 +45,17 @@ function processFile() {
         const obfuscatedScript = obfuscateScript(fileContent);
         const blob = new Blob([obfuscatedScript], { type: 'text/plain' });
         const url = URL.createObjectURL(blob);
-        const downloadLink = document.getElementById('download-link');
 
         // Set download filename to input file name with _processed suffix and .lua extension
         const fileName = input.name.replace(/\.lua$/, '') + '_processed.lua';
-        downloadLink.href = url;
-        downloadLink.download = fileName;
-        downloadLink.style.display = 'block';
+        
+        // Create a temporary link to trigger the download
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = fileName;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
     };
     reader.readAsText(input);
 }
