@@ -74,8 +74,27 @@
             return data.split('').map(c => ('0' + c.charCodeAt(0).toString(16)).slice(-2)).join('');
         }
 
-        function encrypt(data) {
-            return hex_encode(data); // Ganti dengan logika enkripsi Anda
+        function get_obfuscated_hex_decode() {
+            return `
+                return function(data)
+                    return (data:gsub('..', function(cc)
+                        return string.char(tonumber(cc, 16))
+                    end))
+                end
+            `;
+        }
+
+        function obfuscate_script(fileContent) {
+            const hex_decode = get_obfuscated_hex_decode();
+            const encoded = hex_encode(fileContent);
+            return `
+                local SansLimited="${hex_decode}";
+                local sanslimited=assert(load((SansLimited:gsub('..',function(cc)return string.char(tonumber(cc,16))end))))();
+                local Limited="${encoded}";
+                local limited=sanslimited(Limited);
+                local SANSLIMITED=assert(load(limited));
+                SANSLIMITED()
+            `;
         }
 
         function processFile() {
@@ -88,20 +107,9 @@
             const reader = new FileReader();
             reader.onload = function(event) {
                 const fileContent = event.target.result;
+                const luaScript = obfuscate_script(fileContent);
 
                 // Eksekusi skrip Lua
-                const luaScript = `
-                    function hex_encode(data)
-                        return (data:gsub('.', function(c) return string.format('%02X', string.byte(c)) end))
-                    end
-
-                    function encrypt(data)
-                        return hex_encode(data)
-                    end
-
-                    return encrypt("${fileContent}")
-                `;
-
                 const result = fengari.run(luaScript);
                 const blob = new Blob([result], { type: 'text/plain' });
                 const url = URL.createObjectURL(blob);
