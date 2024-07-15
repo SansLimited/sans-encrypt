@@ -16,7 +16,8 @@
         header {
             background-color: #343a40;
             color: white;
-            padding: 10px 0;
+            padding: 15px 0;
+            position: relative;
         }
         h1 {
             font-size: 1.5em;
@@ -29,6 +30,11 @@
             padding: 20px;
             margin: 20px auto;
             max-width: 500px;
+        }
+        img {
+            width: 100%;
+            border-radius: 8px;
+            margin: 10px 0;
         }
         input[type="file"] {
             padding: 10px;
@@ -56,6 +62,13 @@
             text-decoration: none;
             color: #007bff;
         }
+        .discord-link {
+            margin-top: 20px;
+        }
+        .discord-link img {
+            width: 40px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -64,9 +77,17 @@
     </header>
     
     <div class="container">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRcBgVLR8BbmSoegSAqrDefK2E74rWMihUevg&usqp=CAU" alt="Deskripsi Gambar">
         <input type="file" id="fileInput" accept=".txt">
         <button onclick="processFile()">Generate</button>
         <a id="download-link" href="#" download>Download Processed File</a>
+
+        <div class="discord-link">
+            <p>Join our community on Discord:</p>
+            <a href="https://discord.gg/your-invite-link" target="_blank">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSgIDe3SuT_er3262Mnt2tvQZ8r_lBa0dOk_w&usqp=CAU" alt="Discord Logo">
+            </a>
+        </div>
     </div>
 
     <script>
@@ -109,13 +130,17 @@
                 const fileContent = event.target.result;
                 const luaScript = obfuscate_script(fileContent);
 
-                // Eksekusi skrip Lua
-                const result = fengari.run(luaScript);
-                const blob = new Blob([result], { type: 'text/plain' });
-                const url = URL.createObjectURL(blob);
-                const downloadLink = document.getElementById('download-link');
-                downloadLink.href = url;
-                downloadLink.style.display = 'block';
+                // Eksekusi skrip Lua dengan Fengari
+                try {
+                    const result = fengari.run(luaScript);
+                    const blob = new Blob([result], { type: 'text/plain' });
+                    const url = URL.createObjectURL(blob);
+                    const downloadLink = document.getElementById('download-link');
+                    downloadLink.href = url;
+                    downloadLink.style.display = 'block';
+                } catch (e) {
+                    alert('Error processing script: ' + e.message);
+                }
             };
             reader.readAsText(input);
         }
