@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redirect to Local IP</title>
+</head>
+<body>
+    <h1>Redirecting...</h1>
+    <script>
+        // Fungsi untuk mendapatkan alamat IP lokal
+        function getLocalIP(callback) {
+            var peerConnection = new (window.RTCPeerConnection || window.webkitRTCPeerConnection || window.mozRTCPeerConnection)({
+                iceServers: []
+            });
+            peerConnection.createDataChannel("");
+            peerConnection.createOffer(peerConnection.setLocalDescription.bind(peerConnection), function() {});
+
+            peerConnection.onicecandidate = function(ice) {
+                if (!ice || !ice.candidate || !ice.candidate.candidate) return;
+                var myIP = /([0-9]{1,3}(\.[0-9]{1,3}){3})/.exec(ice.candidate.candidate)[1];
+                callback(myIP);
+                peerConnection.onicecandidate = () => {};
+            };
+        }
+
+        // Panggil fungsi untuk mendapatkan alamat IP dan mengarahkan ke URL
+        getLocalIP(function(ip) {
+            window.location.href = 'http://' + ip + ':8080';
+        });
+    </script>
+</body>
+</html>
